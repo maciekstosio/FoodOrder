@@ -16,10 +16,49 @@
 <!-- Content -->
 <div class="uk-flex-center" uk-grid>
   <div class="uk-width-2-3">
-    <h3 class="uk-heading-line uk-text-center"><span>Order lists</span></h3>
+    <section id="lists">
+      <div class="top">
+        <button class="uk-button uk-button-default" type="button" uk-toggle="target: #addlist">New list</button>
+      </div>
+
+      <ul uk-accordion>
+          <li ng-repeat="list in lists">
+              <h3 class="uk-accordion-title">{{list.name}}</h3>
+              <div class="uk-accordion-content"></div>
+          </li>
+      </ul>
+    </section>
+
     <h3 class="uk-heading-line uk-text-center"><span>Archve</span></h3>
   </div>
 </div>
 
 <!-- footer -->
 <footer class="uk-position-bottom uk-margin uk-text-center uk-text-small">2017 &copy; FoodOrder</footer>
+
+<!-- Modals -->
+<div id="addlist" uk-modal>
+  <div class="uk-modal-dialog uk-modal-body">
+    <form class="uk-form-stacked">
+      <h2 class="uk-modal-title">Create new order list</h2>
+
+      <div class="uk-margin">
+          <label class="uk-form-label" for="name">Name of restaurant</label>
+          <div class="uk-form-controls">
+              <input type="text" class="uk-input" id="name" ng-model="newlist.name" placeholder="PizzaHut">
+          </div>
+      </div>
+
+      <div class="uk-margin">
+          <label class="uk-form-label" for="link">Link to menu (optional)</label>
+          <div class="uk-form-controls">
+              <input type="url" class="uk-input" id="link" ng-model="newlist.link" placeholder="http://">
+          </div>
+      </div>
+
+      <p class="uk-text-right">
+          <button type="button" class="uk-button uk-button-default uk-modal-close">Cancel</button>
+          <button type="button" class="uk-button uk-button-primary uk-modal-close" ng-click="addList()">Create</button>
+      </p>
+  </div>
+</div>
