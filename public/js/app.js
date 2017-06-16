@@ -1,6 +1,6 @@
 var app = angular.module('FoodOrder', ['ngRoute','ng-token-auth']);
 
-app.config(function($authProvider,$routeProvider){
+app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
 		apiUrl: 'http://localhost:3000',
@@ -10,10 +10,10 @@ app.config(function($authProvider,$routeProvider){
 	});
 
   //Route
-  $routeProvider.when("/app", {
+  $routeProvider.when("/", {
     templateUrl : "views/app.html",
     controller : "app"
-  }).when("/", {
+  }).when("/login", {
     templateUrl : "views/login.html",
     controller : "login"
   });
@@ -21,11 +21,9 @@ app.config(function($authProvider,$routeProvider){
 
 
 app.controller('login', function($scope,$auth,$location){
-  $scope.hello = "Hello World";
-
   $auth.validateUser().then(function(resp) {
     //Redirect to app
-    $location.path('/app');
+    $location.path('/');
   }).catch(function(resp) {
     if(resp.reason!="unauthorized"){
       alert("Error");
@@ -37,7 +35,8 @@ app.controller('login', function($scope,$auth,$location){
   $scope.authenticate = function(){
     $auth.authenticate('github').then(function(resp) {
         //Redirect to app
-        $location.path('/app');
+        alert("REDIRECT");
+        $location.path('/');
       }).catch(function(resp) {
         alert("Error");
       });
@@ -48,14 +47,18 @@ app.controller('app', function($scope,$auth,$location){
   //Authenticate
   $auth.validateUser().then(function(resp) {
     console.log(resp);
+    $location.search({});
+    $scope.nickname = resp.nickname;
+    $scope.name = resp.name;
+    $scope.image = resp.image;
   }).catch(function(resp) {
     //Redirect to login page
-    $location.path('/');
+    $location.path('/login');
   });
 
   $scope.logout = function() {
     $auth.signOut().then(function(resp) {
-      $location.path('/')
+      $location.path('/login');
     }).catch(function(resp) {
       alert("Error");
     });

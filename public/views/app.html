@@ -1,1 +1,25 @@
-<button ng-click="logout()">Wyloguj</button>
+<!-- Navbar -->
+<nav class="uk-navbar-container uk-margin" uk-navbar>
+  <div class="uk-navbar-left">
+    <ul class="uk-navbar-nav">
+      <li><a ng-click="logout()"><span uk-icon="icon: sign-out"></a></li>
+    </ul>
+  </div>
+  <div class="uk-navbar-center">
+    <span class="uk-navbar-item uk-logo">FoodOrder</span>
+  </div>
+  <div class="uk-navbar-right">
+    <span class="uk-navbar-item">{{name ? name : nickname}} <img class="uk-border-circle" ng-src="{{image}}" alt="Avatar"></span>
+  </div>
+</nav>
+
+<!-- Content -->
+<div class="uk-flex-center" uk-grid>
+  <div class="uk-width-2-3">
+    <h3 class="uk-heading-line uk-text-center"><span>Order lists</span></h3>
+    <h3 class="uk-heading-line uk-text-center"><span>Archve</span></h3>
+  </div>
+</div>
+
+<!-- footer -->
+<footer class="uk-position-bottom uk-margin uk-text-center uk-text-small">2017 &copy; FoodOrder</footer>
