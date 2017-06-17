@@ -5,7 +5,6 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
 		apiUrl: 'http://localhost:3000',
-    // storage: 'localStorage',
     authProviderPaths: {
       github: '/auth/github'
     }
