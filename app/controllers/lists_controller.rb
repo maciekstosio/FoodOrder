@@ -2,7 +2,9 @@ class ListsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    render json: List.all, status: 200
+    lists = List.all
+    orders = Order.all
+    render json: { lists: lists, orders: orders} , status: 200
   end
 
   def create

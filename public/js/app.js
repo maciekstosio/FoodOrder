@@ -65,14 +65,22 @@ app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$
 
 app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,$auth,$location,$http){
   $scope.$on('auth:validation-success', function(ev,user) {
+    $scope.id = user.id;
     $scope.name = user.name;
     $scope.nickname = user.nickname;
     $scope.image = user.image;
   });
 
   $http.get(serverUrl+'/lists').then(function(resp) {
-    $scope.lists = resp.data;
+    $scope.lists = resp.data.lists;
+    $scope.orders = resp.data.orders;
     console.log($scope.lists);
+
+    $scope.ordered = [];
+    $scope.orders.forEach(function(item){
+      if(item.user_id==$scope.id) $scope.ordered.push(item.list_id);
+    });
+    console.log($scope.ordered);
   });
 
   //Add new list
@@ -99,6 +107,43 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       alert("DODANO");
     }, function error(resp) {
       alert("ERROR");
+      console.log(resp);
+    });
+  };
+
+  $scope.neworder = [];
+  $scope.orderform = [];
+  $scope.initNewOrder = function(id){
+    $scope.orderform[id] = {};
+    $scope.neworder[id] = {};
+    $scope.neworder[id].name="";
+    $scope.neworder[id].price="";
+  };
+
+  $scope.addOrder = function(id,name,price){
+    data = {
+      list_id: id,
+      name: name,
+      price: price
+    };
+
+    $http.post(serverUrl+"/orders", JSON.stringify(data)).then(function success(resp) {
+      console.log(resp);
+      $scope.orders.push({
+        id: resp.data.id,
+        list_id: id,
+        name: name,
+        price: price
+      });
+
+      $scope.ordered.push(id);
+
+      $scope.neworder[id].name="";
+      $scope.neworder[id].price="";
+      $scope.orderform[id].$setPristine();
+      alert("Added!");
+    }, function error(resp) {
+      alert("error");
       console.log(resp);
     });
   }

@@ -21,20 +21,54 @@
         <button class="uk-button uk-button-default" type="button" uk-toggle="target: #addlist">New list</button>
       </div>
 
-      <ul uk-accordion>
-          <li ng-repeat="list in lists">
-              <h3 class="uk-accordion-title">{{list.name}}</h3>
-              <div class="uk-accordion-content"></div>
-          </li>
-      </ul>
+      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin" ng-repeat="list in lists">
+          <p class="uk-margin-remove">
+            <span class="uk-text-large">{{list.name}}</span>
+            <span class="uk-label uk-label-warning" style="font-size: 10px; margin-top: -16px;">In progress...</span>
+            <a uk-toggle="target: #more{{list.id}}; animation: uk-animation-slide-top-small" uk-icon="icon: chevron-down"></a>
+          </p>
+          <div id="more{{list.id}}" hidden="hidden">
+
+          <div class="uk-grid-small" ng-repeat="order in orders" ng-if="order.list_id==list.id"uk-grid>
+            <div class="uk-width-expand" uk-leader>{{order.name}}</div>
+            <div>{{order.price}}zł</div>
+          </div>
+
+          <div class="uk-grid-small" ng-show="orderform[list.id].$dirty" uk-grid>
+            <div class="uk-width-expand" uk-leader>{{neworder[list.id].name}}</div>
+            <div>{{neworder[list.id].price}}zł</div>
+          </div>
+
+          <!-- Add form -->
+          <ng-form name="orderform[list.id]" ng-init="initNewOrder(list.id)" ng-if="ordered.indexOf(list.id) < 0" uk-grid>
+            <div class="uk-width-3-5">
+                <label class="uk-form-label" for="name">Meal</label>
+                <div class="uk-form-controls">
+                    <input type="text" name="name" class="uk-input" id="name" ng-model="neworder[list.id].name" placeholder="Meal" required>
+                </div>
+            </div>
+
+            <div class="uk-width-1-5">
+                <label class="uk-form-label" for="link">Price</label>
+                <div class="uk-form-controls">
+                    <input type="number" name="price" class="uk-input" id="link" ng-model="neworder[list.id].price" placeholder="Price" required>
+                </div>
+            </div>
+
+            <div class="uk-width-1-5">
+              <button type="button" class="uk-button uk-button-primary uk-width-1-1" ng-click="addOrder(list.id,neworder[list.id].name,neworder[list.id].price)" style="margin-top: 24px;">Add</button>
+            </div>
+          </ng-form>
+        </div>
+      </div>
     </section>
 
-    <h3 class="uk-heading-line uk-text-center"><span>Archve</span></h3>
+    <h3 class="uk-heading-line uk-text-center"><span>Archive</span></h3>
   </div>
 </div>
 
 <!-- footer -->
-<footer class="uk-position-bottom uk-margin uk-text-center uk-text-small">2017 &copy; FoodOrder</footer>
+<footer class="uk-margin uk-text-center uk-text-small">2017 &copy; FoodOrder</footer>
 
 <!-- Modals -->
 <div id="addlist" uk-modal>
@@ -60,5 +94,6 @@
           <button type="button" class="uk-button uk-button-default uk-modal-close">Cancel</button>
           <button type="button" class="uk-button uk-button-primary uk-modal-close" ng-click="addList()">Create</button>
       </p>
+    </form>
   </div>
 </div>
