@@ -5,7 +5,6 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
 		apiUrl: 'http://localhost:3000',
-    omniauthWindowType: 'newWindow',
     authProviderPaths: {
       github: '/auth/github'
     }
@@ -146,9 +145,10 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
   //Logout
   $scope.logout = function() {
     $auth.signOut().then(function(resp) {
-      $location.path('/login');
+      window.location = "/";
     }).catch(function(resp) {
       alert("Error");
+      window.location = "/";
     });
   };
 }]);
