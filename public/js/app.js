@@ -5,6 +5,7 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
 		apiUrl: 'http://localhost:3000',
+    omniauthWindowType: 'newWindow',
     authProviderPaths: {
       github: '/auth/github'
     }
@@ -21,38 +22,37 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
 });
 
 app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$location){
+  $auth.validateUser().then(function(resp) {
+    $location.path('/');
+  });
+
   $scope.authenticate = function(){
     alert($location.url());
-    $auth.authenticate('github').then(function(resp) {
-        $location.path('/');
-      }).catch(function(resp) {
-        alert("Error");
-      });
+    $auth.authenticate('github');
   };
 }]);
 
 
 app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,$auth,$location,$http){
   $auth.validateUser().then(function(resp) {
-    $scope.id = user.id;
-    $scope.name = user.name;
-    $scope.nickname = user.nickname;
-    $scope.image = user.image;
+    $scope.id = resp.id;
+    $scope.name = resp.name;
+    $scope.nickname = resp.nickname;
+    $scope.image = resp.image;
+
+    //Load lists and orders
+    $http.get(serverUrl+'/lists').then(function(resp) {
+      $scope.lists = resp.data.lists;
+      $scope.orders = resp.data.orders;
+
+      $scope.ordered = [];
+      $scope.orders.forEach(function(item){
+        if(item.user_id==$scope.id) $scope.ordered.push(item.list_id);
+      });
+      // console.log($scope.ordered);
+    });
   }).catch(function(resp) {
     $location.path('/login');
-  });
-
-  //Load lists and orders
-  $http.get(serverUrl+'/lists').then(function(resp) {
-    $scope.lists = resp.data.lists;
-    $scope.orders = resp.data.orders;
-    console.log($scope.lists);
-
-    $scope.ordered = [];
-    $scope.orders.forEach(function(item){
-      if(item.user_id==$scope.id) $scope.ordered.push(item.list_id);
-    });
-    console.log($scope.ordered);
   });
 
   //Add new list
@@ -96,10 +96,10 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
 
     $http.put(serverUrl+"/lists/"+id, JSON.stringify(data)).then(function success(resp) {
       console.log(resp);
-      $scope.lists.find(x => x.id === id).state = $scope.liststate[id];
+      $scope.lists.find(function (e) { return e.id == id; }).state = $scope.liststate[id];
       alert("Changed");
     }, function error(resp) {
-      $scope.liststate[id] = $scope.lists.find(x => x.id === id).state;
+      $scope.liststate[id] = $scope.lists.find(function (e) { return e.id == id; }).state;
       alert("error");
       console.log(resp);
     });
