@@ -3,3 +3,13 @@ nav img{
   height: 40px;
   margin-left: 10px;
 }
+
+#lists .state,
+#archive .state{
+  font-size: 10px;
+  margin-top: -16px;
+}
+
+.orderform button{
+  margin-top: 24px;
+}

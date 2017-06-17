@@ -20,36 +20,6 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
   });
 });
 
-app.run(['$rootScope','$auth', '$location', function($rootScope,$auth,$location) {
-  $auth.validateUser().then(function(resp) {
-    //Redirect to app
-    $location.path('/');
-  }).catch(function(resp) {
-    $location.path('/login')
-    if(resp.reason!="unauthorized"){
-      alert("Error");
-      console.log(resp);
-    }
-  });
-
-  $rootScope.$on('auth:login-error', function(ev, reason) {
-    alert('auth failed because', reason.errors[0]);
-  });
-
-  $rootScope.$on('auth:oauth-registration', function(ev, user) {
-    alert('new user registered through oauth:' + user.email);
-  });
-
-  $rootScope.$on('auth:logout-success', function(ev) {
-    alert('goodbye');
-    $location.search({});
-  });
-
-  $rootScope.$on('auth:session-expired', function(ev) {
-    alert('Session has expired');
-  });
-}]);
-
 app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$location){
   $scope.authenticate = function(){
     alert($location.url());
@@ -63,11 +33,13 @@ app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$
 
 
 app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,$auth,$location,$http){
-  $scope.$on('auth:validation-success', function(ev,user) {
+  $auth.validateUser().then(function(resp) {
     $scope.id = user.id;
     $scope.name = user.name;
     $scope.nickname = user.nickname;
     $scope.image = user.image;
+  }).catch(function(resp) {
+    $location.path('/login');
   });
 
   //Load lists and orders
