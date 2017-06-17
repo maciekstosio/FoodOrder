@@ -30,5 +30,8 @@ module Food
     #Sessions for OmniAuth
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore
+
+    #Own validators
+    config.autoload_paths += %W["#{config.root}/app/validators/"]
   end
 end

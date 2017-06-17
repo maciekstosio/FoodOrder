@@ -10,7 +10,7 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
     }
 	});
 
-  //Route
+  //Routes
   $routeProvider.when("/", {
     templateUrl : "views/app.html",
     controller : "app"
@@ -70,6 +70,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     $scope.image = user.image;
   });
 
+  //Load lists and orders
   $http.get(serverUrl+'/lists').then(function(resp) {
     $scope.lists = resp.data.lists;
     $scope.orders = resp.data.orders;
@@ -96,6 +97,8 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     $http.post(serverUrl+"/lists", JSON.stringify(data)).then(function success(resp) {
       $scope.lists.push({
         id: resp.data.id,
+        user_id: $scope.id,
+        state: 0,
         name: $scope.newlist.name,
         link: $scope.newlist.link
       });
@@ -110,6 +113,27 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     });
   };
 
+  //Change list status
+  $scope.states = ["In progress", "Finalized", "Ordered", "Delivered"];
+  $scope.liststate = [];
+
+  $scope.changestate = function(id){
+    data = {
+      state: $scope.liststate[id]
+    };
+
+    $http.put(serverUrl+"/lists/"+id, JSON.stringify(data)).then(function success(resp) {
+      console.log(resp);
+      $scope.lists.find(x => x.id === id).state = $scope.liststate[id];
+      alert("Changed");
+    }, function error(resp) {
+      $scope.liststate[id] = $scope.lists.find(x => x.id === id).state;
+      alert("error");
+      console.log(resp);
+    });
+  };
+
+  //Add new order
   $scope.neworder = [];
   $scope.orderform = [];
   $scope.initNewOrder = function(id){

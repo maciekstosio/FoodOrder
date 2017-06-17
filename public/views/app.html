@@ -21,15 +21,27 @@
         <button class="uk-button uk-button-default" type="button" uk-toggle="target: #addlist">New list</button>
       </div>
 
-      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin" ng-repeat="list in lists">
-          <p class="uk-margin-remove">
-            <span class="uk-text-large">{{list.name}}</span>
-            <span class="uk-label uk-label-warning" style="font-size: 10px; margin-top: -16px;">In progress...</span>
+      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin" ng-repeat="list in lists" ng-if="list.state==0">
+        <div class="uk-margin-remove uk-grid-collapse" uk-grid>
+          <div class="uk-width-2-3">
             <a uk-toggle="target: #more{{list.id}}; animation: uk-animation-slide-top-small" uk-icon="icon: chevron-down"></a>
-          </p>
-          <div id="more{{list.id}}" hidden="hidden">
-
-          <div class="uk-grid-small" ng-repeat="order in orders" ng-if="order.list_id==list.id"uk-grid>
+            <span class="uk-text-large" ng-if="!list.link">{{list.name}}</span>
+            <a class="uk-text-large" target="_blank" ng-href="{{list.link}}" ng-if="list.link">{{list.name}}</a>
+            <span class="uk-label" ng-class="list.state==0? 'uk-label-warning' : 'uk-label-danger'" style="font-size: 10px; margin-top: -16px;">{{states[list.state]}}</span>
+          </div>
+          <form class="uk-width-1-3 uk-text-right" ng-show="list.user_id==id">
+            <label for="statefield{{list.id}}">Status</label>
+            <select class="uk-select uk-form-small uk-form-width-small"
+                    id="statefield{{list.id}}"
+                    ng-change="changestate(list.id)"
+                    ng-model="liststate[list.id]"
+                    ng-options="states.indexOf(state) as state for state in states"
+                    ng-init="liststate[list.id]=list.state">
+            </select>
+          </form>
+        </div>
+        <div id="more{{list.id}}" hidden="hidden">
+          <div class="uk-grid-small" ng-repeat="order in orders" ng-if="order.list_id==list.id" uk-grid>
             <div class="uk-width-expand" uk-leader>{{order.name}}</div>
             <div>{{order.price}}zł</div>
           </div>
@@ -56,7 +68,7 @@
             </div>
 
             <div class="uk-width-1-5">
-              <button type="button" class="uk-button uk-button-primary uk-width-1-1" ng-click="addOrder(list.id,neworder[list.id].name,neworder[list.id].price)" style="margin-top: 24px;">Add</button>
+              <button type="button" class="uk-button uk-button-primary uk-width-1-1" ng-disabled="orderform[list.id].$invalid" ng-click="addOrder(list.id,neworder[list.id].name,neworder[list.id].price)" style="margin-top: 24px;">Add</button>
             </div>
           </ng-form>
         </div>
@@ -64,6 +76,35 @@
     </section>
 
     <h3 class="uk-heading-line uk-text-center"><span>Archive</span></h3>
+
+    <section id="archive">
+      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin" ng-repeat="list in lists" ng-if="list.state!=0">
+        <div class="uk-margin-remove uk-grid-collapse" uk-grid>
+          <div class="uk-width-2-3">
+            <a uk-toggle="target: #morearchive{{list.id}}; animation: uk-animation-slide-top-small" uk-icon="icon: chevron-down"></a>
+            <span class="uk-text-large" ng-if="!list.link">{{list.name}}</span>
+            <a class="uk-text-large" target="_blank" ng-href="{{list.link}}" ng-if="list.link">{{list.name}}</a>
+            <span class="uk-label" ng-class="list.state==0? 'uk-label-warning' : 'uk-label-danger'" style="font-size: 10px; margin-top: -16px;">{{states[list.state]}}</span>
+          </div>
+          <form class="uk-width-1-3 uk-text-right" ng-show="list.user_id==id">
+            <label for="statefield{{list.id}}">Status</label>
+            <select class="uk-select uk-form-small uk-form-width-small"
+                    id="statefield{{list.id}}"
+                    ng-change="changestate(list.id)"
+                    ng-model="liststate[list.id]"
+                    ng-options="states.indexOf(state) as state for state in states"
+                    ng-init="liststate[list.id]=list.state">
+            </select>
+          </form>
+        </div>
+        <div id="morearchive{{list.id}}" hidden="hidden">
+          <div class="uk-grid-small" ng-repeat="order in orders" ng-if="order.list_id==list.id" uk-grid>
+            <div class="uk-width-expand" uk-leader>{{order.name}}</div>
+            <div>{{order.price}}zł</div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </div>
 
@@ -73,27 +114,27 @@
 <!-- Modals -->
 <div id="addlist" uk-modal>
   <div class="uk-modal-dialog uk-modal-body">
-    <form class="uk-form-stacked">
+    <ng-form name="listform" class="uk-form-stacked">
       <h2 class="uk-modal-title">Create new order list</h2>
 
       <div class="uk-margin">
           <label class="uk-form-label" for="name">Name of restaurant</label>
           <div class="uk-form-controls">
-              <input type="text" class="uk-input" id="name" ng-model="newlist.name" placeholder="PizzaHut">
+              <input type="text" name="name" class="uk-input" id="name" ng-model="newlist.name" placeholder="PizzaHut" required>
           </div>
       </div>
 
       <div class="uk-margin">
           <label class="uk-form-label" for="link">Link to menu (optional)</label>
           <div class="uk-form-controls">
-              <input type="url" class="uk-input" id="link" ng-model="newlist.link" placeholder="http://">
+              <input type="url" name="name" class="uk-input" id="link" ng-model="newlist.link" placeholder="http://">
           </div>
       </div>
 
       <p class="uk-text-right">
           <button type="button" class="uk-button uk-button-default uk-modal-close">Cancel</button>
-          <button type="button" class="uk-button uk-button-primary uk-modal-close" ng-click="addList()">Create</button>
+          <button type="button" class="uk-button uk-button-primary uk-modal-close" ng-click="addList()" ng-disabled="listform.$invalid">Create</button>
       </p>
-    </form>
+    </ng-form>
   </div>
 </div>
