@@ -3,6 +3,6 @@ class User < ActiveRecord::Base
   devise :omniauthable, :trackable, :database_authenticatable
   include DeviseTokenAuth::Concerns::User
 
-  has_many :lists
+  has_many :lists, dependent: :destroy
   has_many :orders
 end

@@ -21,43 +21,52 @@ class ListsController < ApplicationController
     end
   end
 
-  def show
-  end
-
   def update
-    list = List.find(params[:id])
-    if list.user_id==current_user.id
-      if list.update_attributes(state_params)
-        render json: {
-          messages: ["State changed successfuly"]
-        }, status: 200
+    list = List.where(id: params[:id])
+    if list.present?
+      if list.first.user_id==current_user.id
+        if list.first.update_attributes(state_params)
+          render json: {
+            messages: ["State changed successfuly"]
+          }, status: 200
+        else
+          render json: {
+            messages: errors.full_messages
+          }, status: 400
+        end
       else
         render json: {
-          messages: errors.full_messages
+          messages: ["You don't have permission to change status of this list"]
         }, status: 400
       end
     else
       render json: {
-        messages: ["You don't have permission to change status of this list"]
+        messages: ["List doesn't exist"]
       }, status: 400
     end
   end
 
   def destroy
-    list = List.find(params[:id])
-    if list.user_id==current_user.id
-      if list.destroy
-        render json: {
-          messages: ["List destroyed successfuly"]
-        }, status: 200
+    list = List.where(id: params[:id])
+    if list.present?
+      if list.first.user_id==current_user.id
+        if list.first.destroy
+          render json: {
+            messages: ["List deleted successfuly"]
+          }, status: 200
+        else
+          render json: {
+            messages: errors.full_messages
+          }, status: 400
+        end
       else
         render json: {
-          messages: errors.full_messages
+          messages: ["You don't have permission to change status of this list"]
         }, status: 400
       end
     else
       render json: {
-        messages: ["You don't have permission to change status of this list"]
+        messages: ["List doesn't exist"]
       }, status: 400
     end
   end

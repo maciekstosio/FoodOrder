@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
         end
       else
         render json: {
-          messages: ["This list is closed for new orders"]
+          messages: ["This list is closed, you can't add new order"]
         }, status: 400
       end
     else
