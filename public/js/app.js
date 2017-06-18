@@ -142,6 +142,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       $scope.orders.push({
         id: resp.data.id,
         list_id: id,
+        user_id: $scope.id,
         name: name,
         price: price,
         username: $scope.name,
@@ -174,14 +175,13 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       }
 
       //Allow user to order new thing
-      console.log($scope.ordered);
       for(var i=0; i < $scope.ordered.length; i++){
         if($scope.ordered[i] == list_id){
           $scope.ordered.splice(i,1);
           break;
         }
       }
-      console.log($scope.ordered);
+
       alert("Deleted");
     }, function error(resp) {
       console.log(resp);

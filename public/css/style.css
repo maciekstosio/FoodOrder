@@ -10,10 +10,13 @@ nav img{
   margin-top: -16px;
 }
 
+#lists .more,
+#archive .more{
+  padding-top: 25px;
+}
 
 #lists .order,
 #archive .order{
-  padding-top: 25px;
   padding-left: 25px;
   padding-right: 25px;
 }
@@ -27,6 +30,13 @@ nav img{
 #lists .order .vertical-fix,
 #archive .order .vertical-fix{
   padding-top: 3px;
+}
+
+#lists .order .delete{
+  margin-top: 5px;
+  padding-left: 0px;
+  margin-left: 5px;
+  margin-right: -25px;
 }
 
 

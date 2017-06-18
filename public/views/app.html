@@ -44,7 +44,7 @@
           </div>
         </div>
         <!-- Details, orders, form -->
-        <div id="more{{list.id}}" hidden="hidden">
+        <div class="more" id="more{{list.id}}" hidden="hidden">
           <div class="uk-text-large uk-text-center uk-margin-top uk-margin-bottom" ng-show="!hasElementWithListID(orders,list.id) && !neworder[list.id].name && !neworder[list.id].price">No one has ordered yet</div>
 
           <!-- Display orders -->
@@ -54,9 +54,7 @@
             </div>
             <div class="uk-width-expand vertical-fix" uk-leader>{{order.name}}</div>
             <div class="vertical-fix">{{order.price | number:2}}zł</div>
-            <div>
-              <a uk-icon="icon: close" ng-click="deleteorder(list.id,order.id)"></a>
-            </div>
+            <a class="delete" uk-icon="icon: close" ng-click="deleteorder(list.id,order.id)" ng-if="order.user_id==id"></a>
           </div>
 
           <!-- Preview -->

@@ -39,19 +39,25 @@ class OrdersController < ApplicationController
     order = Order.where(id: params[:id], list_id: params[:list_id])
     if list.present?
       if order.present?
-        if list.first.state==0
-          if order.first.destroy
-            render json: {
-              messages: ["Order deleted successfuly"]
-            }, status: 200
+        if order.first.user_id == current_user.id
+          if list.first.state==0
+            if order.first.destroy
+              render json: {
+                messages: ["Order deleted successfuly"]
+              }, status: 200
+            else
+              render json: {
+                messages: order.errors.full_messages
+              }, status: 400
+            end
           else
             render json: {
-              messages: order.errors.full_messages
+              messages: ["This list is closed, you can't delete your order"]
             }, status: 400
           end
         else
           render json: {
-            messages: ["This list is closed, you can't delete your order"]
+            messages: ["You don't have permission to delete this order"]
           }, status: 400
         end
       else
