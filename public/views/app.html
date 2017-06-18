@@ -48,15 +48,24 @@
           <div class="uk-text-large uk-text-center uk-margin-top uk-margin-bottom" ng-show="!hasElementWithListID(orders,list.id) && !neworder[list.id].name && !neworder[list.id].price">No one has ordered yet</div>
 
           <!-- Display orders -->
-          <div class="uk-grid-small" ng-repeat="order in orders" ng-if="order.list_id==list.id" uk-grid>
-            <div class="uk-width-expand" uk-leader>{{order.name}}</div>
-            <div>{{order.price | number:2}}zł</div>
+          <div class="uk-grid-small order" ng-repeat="order in orders" ng-if="order.list_id==list.id" uk-grid>
+            <div>
+              <img ng-src="{{order.userimage}}" class="uk-border-circle" title="{{order.username ? order.username : order.usernickname}}" alt="avatar" uk-tooltip="pos: bottom"/>
+            </div>
+            <div class="uk-width-expand vertical-fix" uk-leader>{{order.name}}</div>
+            <div class="vertical-fix">{{order.price | number:2}}zł</div>
+            <div>
+              <a uk-icon="icon: close" ng-click="deleteorder(list.id,order.id)"></a>
+            </div>
           </div>
 
           <!-- Preview -->
-          <div class="uk-grid-small" ng-show="neworder[list.id].name || neworder[list.id].price" uk-grid>
-            <div class="uk-width-expand" uk-leader>{{neworder[list.id].name}}</div>
-            <div>{{neworder[list.id].price | number:2}}zł</div>
+          <div class="uk-grid-small order" ng-show="neworder[list.id].name || neworder[list.id].price" uk-grid>
+            <div>
+              <img ng-src="{{image}}" class="uk-border-circle" title="{{name ? name : nickname}}" alt="avatar" uk-tooltip="pos: bottom"/>
+            </div>
+            <div class="uk-width-expand vertical-fix" uk-leader>{{neworder[list.id].name}}</div>
+            <div class="vertical-fix">{{neworder[list.id].price | number:2}}zł</div>
           </div>
 
           <!-- Add form -->

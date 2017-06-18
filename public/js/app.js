@@ -40,6 +40,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
 
     //Load lists and orders
     $http.get(serverUrl+'/lists').then(function(resp) {
+      console.log(resp);
       $scope.lists = resp.data.lists;
       $scope.orders = resp.data.orders;
 
@@ -102,7 +103,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     });
   };
 
-  //Delete list status
+  //Delete list
   $scope.deletelist = function(id){
     $http.delete(serverUrl+"/lists/"+id).then(function success(resp) {
       console.log(resp);
@@ -142,7 +143,10 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
         id: resp.data.id,
         list_id: id,
         name: name,
-        price: price
+        price: price,
+        username: $scope.name,
+        usernickname: $scope.nickname,
+        userimage: $scope.image
       });
 
       $scope.ordered.push(id);
@@ -156,6 +160,34 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       console.log(resp);
     });
   }
+
+  $scope.deleteorder = function(list_id,id){
+    $http.delete(serverUrl+"/lists/"+list_id+"/orders/"+id).then(function success(resp) {
+      console.log(resp);
+
+      //Remove order
+      for(var i=0; i < $scope.orders.length; i++){
+        if($scope.orders[i].id == id){
+          $scope.orders.splice(i,1);
+          break;
+        }
+      }
+
+      //Allow user to order new thing
+      console.log($scope.ordered);
+      for(var i=0; i < $scope.ordered.length; i++){
+        if($scope.ordered[i] == list_id){
+          $scope.ordered.splice(i,1);
+          break;
+        }
+      }
+      console.log($scope.ordered);
+      alert("Deleted");
+    }, function error(resp) {
+      console.log(resp);
+      alert("error");
+    });
+  };
 
   //Some helpers
   $scope.hasElementWithListID = function(array,id){

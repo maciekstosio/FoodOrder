@@ -3,7 +3,7 @@ class ListsController < ApplicationController
 
   def index
     lists = List.all
-    orders = Order.all
+    orders = Order.joins(:user).select('orders.*, users.name as username, users.image as usernickname, users.image as userimage').all
     render json: { lists: lists, orders: orders} , status: 200
   end
 

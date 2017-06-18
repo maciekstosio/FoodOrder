@@ -10,6 +10,26 @@ nav img{
   margin-top: -16px;
 }
 
+
+#lists .order,
+#archive .order{
+  padding-top: 25px;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+
+#lists .order img,
+#archive .order img{
+  width: 30px;
+  height: 30px;
+}
+
+#lists .order .vertical-fix,
+#archive .order .vertical-fix{
+  padding-top: 3px;
+}
+
+
 .orderform button{
   margin-top: 24px;
 }
