@@ -27,7 +27,7 @@ function success_notification(text){
 app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
-		apiUrl: 'http://localhost:3000',
+		apiUrl: serverUrl,
     authProviderPaths: {
       github: '/auth/github'
     }
