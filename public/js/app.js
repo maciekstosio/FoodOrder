@@ -1,6 +1,20 @@
 var app = angular.module('FoodOrder', ['ngRoute','ng-token-auth']);
 var serverUrl = "http://localhost:3000";
 
+function error_notification(text){
+  UIkit.notification(text , {
+    status: 'danger',
+    pos: 'top-right'
+  });
+}
+
+function success_notification(text){
+  UIkit.notification(text , {
+    status: 'success',
+    pos: 'top-right'
+  });
+}
+
 app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
   $authProvider.configure({
@@ -76,9 +90,15 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       $scope.newlist.name = "";
       $scope.newlist.link = "";
 
-      alert("DODANO");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        success_notification(val);
+      });
     }, function error(resp) {
-      alert("ERROR");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        error_notification(val);
+      });
       console.log(resp);
     });
   };
@@ -95,10 +115,18 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     $http.put(serverUrl+"/lists/"+id, JSON.stringify(data)).then(function success(resp) {
       console.log(resp);
       $scope.lists.find(function (e) { return e.id == id; }).state = $scope.liststate[id];
-      alert("Changed");
+
+      //Notification
+      resp.data.messages.forEach(function(val){
+        success_notification(val);
+      });
     }, function error(resp) {
       $scope.liststate[id] = $scope.lists.find(function (e) { return e.id == id; }).state;
-      alert("error");
+
+      //Notification
+      resp.data.messages.forEach(function(val){
+        error_notification(val);
+      });
       console.log(resp);
     });
   };
@@ -113,10 +141,17 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
           break;
         }
       }
-      alert("Deleted");
+
+      //Notification
+      resp.data.messages.forEach(function(val){
+        success_notification(val);
+      });
     }, function error(resp) {
       console.log(resp);
-      alert("error");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        error_notification(val);
+      });
     });
   };
 
@@ -155,9 +190,16 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       $scope.neworder[id].name="";
       $scope.neworder[id].price="";
       $scope.orderform[id].$setPristine(); //To hide preview
-      alert("Added!");
+
+      //Notification
+      resp.data.messages.forEach(function(val){
+        success_notification(val);
+      });
     }, function error(resp) {
-      alert("error");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        error_notification(val);
+      });
       console.log(resp);
     });
   }
@@ -182,10 +224,16 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
         }
       }
 
-      alert("Deleted");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        success_notification(val);
+      });
     }, function error(resp) {
       console.log(resp);
-      alert("error");
+      //Notification
+      resp.data.messages.forEach(function(val){
+        error_notification(val);
+      });
     });
   };
 
@@ -199,7 +247,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     $auth.signOut().then(function(resp) {
       $location.path('/login');
     }).catch(function(resp) {
-      alert("Error");
       $location.path('/login');
     });
   };
