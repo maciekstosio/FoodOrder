@@ -44,6 +44,22 @@ class ListsController < ApplicationController
   end
 
   def destroy
+    list = List.find(params[:id])
+    if list.user_id==current_user.id
+      if list.destroy
+        render json: {
+          messages: ["List destroyed successfuly"]
+        }, status: 200
+      else
+        render json: {
+          messages: errors.full_messages
+        }, status: 400
+      end
+    else
+      render json: {
+        messages: ["You don't have permission to change status of this list"]
+      }, status: 400
+    end
   end
 
   private

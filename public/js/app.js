@@ -22,12 +22,11 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
 
 app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$location){
   $auth.validateUser().then(function(resp) {
-    $location.path('/');
+    window.location  = '/'; //Use instead $location.path() to get rid of auth params
   });
 
   $scope.authenticate = function(){
-    alert($location.url());
-    $auth.authenticate('github');
+    $auth.authenticate('github'); //We don't use callbacks because we never reach them
   };
 }]);
 
@@ -48,7 +47,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       $scope.orders.forEach(function(item){
         if(item.user_id==$scope.id) $scope.ordered.push(item.list_id);
       });
-      // console.log($scope.ordered);
     });
   }).catch(function(resp) {
     $location.path('/login');
@@ -104,6 +102,23 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     });
   };
 
+  //Delete list status
+  $scope.deletelist = function(id){
+    $http.delete(serverUrl+"/lists/"+id).then(function success(resp) {
+      console.log(resp);
+      for(var i=0; i < $scope.lists.length; i++){
+        if($scope.lists[i].id == id){
+          $scope.lists.splice(i,1);
+          break;
+        }
+      }
+      alert("Deleted");
+    }, function error(resp) {
+      console.log(resp);
+      alert("error");
+    });
+  };
+
   //Add new order
   $scope.neworder = [];
   $scope.orderform = [];
@@ -134,7 +149,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
 
       $scope.neworder[id].name="";
       $scope.neworder[id].price="";
-      $scope.orderform[id].$setPristine();
+      $scope.orderform[id].$setPristine(); //To hide preview
       alert("Added!");
     }, function error(resp) {
       alert("error");
@@ -142,13 +157,18 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     });
   }
 
+  //Some helpers
+  $scope.hasElementWithListID = function(array,id){
+    if(array.filter(function(e){ return e.list_id == id}).length>0) return true;
+    return false;
+  }
   //Logout
   $scope.logout = function() {
     $auth.signOut().then(function(resp) {
-      window.location = "/";
+      $location.path('/login');
     }).catch(function(resp) {
       alert("Error");
-      window.location = "/";
+      $location.path('/login');
     });
   };
 }]);
