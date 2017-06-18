@@ -79,7 +79,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     };
 
     $http.post(serverUrl+"/lists", JSON.stringify(data)).then(function success(resp) {
-      $scope.lists.push({
+      $scope.lists.unshift({
         id: resp.data.id,
         user_id: $scope.id,
         state: 0,
