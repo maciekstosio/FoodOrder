@@ -22,7 +22,7 @@
         <button class="uk-button uk-button-default" type="button" uk-toggle="target: #addlist">New list</button>
       </div>
 
-      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin list" ng-repeat="list in lists" ng-if="list.state==0">
+      <div class="uk-tile uk-tile-muted uk-padding-small uk-margin list" ng-repeat="(index, list) in lists" ng-if="list.state==0">
         <div class="uk-margin-remove uk-grid-collapse" uk-grid>
           <div class="uk-width-2-3">
             <a uk-toggle="target: #more{{list.id}}; animation: uk-animation-slide-top-small" uk-icon="icon: chevron-down"></a>
@@ -44,7 +44,7 @@
           </div>
         </div>
         <!-- Details, orders, form -->
-        <div class="more" id="more{{list.id}}" hidden="hidden">
+        <div class="more" id="more{{list.id}}" ng-attr-hidden="{{ index==0 ? undefined : 'hidden' }}">
           <div class="uk-text-large uk-text-center uk-margin-top uk-margin-bottom" ng-show="!hasElementWithListID(orders,list.id) && !neworder[list.id].name && !neworder[list.id].price">No one has ordered yet</div>
 
           <!-- Display orders -->
