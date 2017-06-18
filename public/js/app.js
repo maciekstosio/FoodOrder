@@ -1,6 +1,10 @@
 var app = angular.module('FoodOrder', ['ngRoute','ng-token-auth']);
 var serverUrl = "http://localhost:3000";
 
+/*
+*HELPERS
+*/
+
 function error_notification(text){
   UIkit.notification(text , {
     status: 'danger',
@@ -14,6 +18,10 @@ function success_notification(text){
     pos: 'top-right'
   });
 }
+
+/*
+* CONFIG
+*/
 
 app.config(function($authProvider,$routeProvider,$locationProvider){
   //Authorization
@@ -34,6 +42,10 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
   });
 });
 
+/*
+* HOME (Login) PAGE
+*/
+
 app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$location){
   $auth.validateUser().then(function(resp) {
     window.location  = '/'; //Use instead $location.path() to get rid of auth params
@@ -44,6 +56,9 @@ app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$
   };
 }]);
 
+/*
+* APP MAIN CONTROLLER
+*/
 
 app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,$auth,$location,$http){
   $auth.validateUser().then(function(resp) {
