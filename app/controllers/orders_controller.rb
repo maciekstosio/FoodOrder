@@ -3,20 +3,33 @@ class OrdersController < ApplicationController
 
   def create
     order = current_user.orders.build(order_params)
-    if current_user.orders.where(list_id: params[:list_id]).count==0
-      if order.save
-        render json: {
-          messages: ["Order added successfuly"],
-          id: order.id
-        }, status: 200
+    list = List.where(id: params[:list_id])
+    if list.present?
+      if list.first.state==0
+        if list.first.user_id==current_user.id
+          if order.save
+            render json: {
+              messages: ["Order added successfuly"],
+              id: order.id
+            }, status: 200
+          else
+            render json: {
+              messages: order.errors.full_messages
+            }, status: 400
+          end
+        else
+          render json: {
+            messages: ["You can't order more than one thing"]
+          }, status: 400
+        end
       else
         render json: {
-          messages: order.errors.full_messages
+          messages: ["This list is closed for new orders"]
         }, status: 400
       end
     else
       render json: {
-        messages: ["You can't order more than one thing"]
+        messages: ["List doesn't exists"]
       }, status: 400
     end
   end
