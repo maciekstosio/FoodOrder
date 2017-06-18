@@ -62,6 +62,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       $scope.orders.forEach(function(item){
         if(item.user_id==$scope.id) $scope.ordered.push(item.list_id);
       });
+      $("#loading").fadeOut(1000);
     });
   }).catch(function(resp) {
     $location.path('/login');
