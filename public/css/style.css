@@ -1,3 +1,14 @@
+/*UIKit*/
+.uk-notification-message-success{
+  background: #edfbf6!important;
+  color: #32d296!important;
+}
+
+.uk-notification-message-danger{
+  background: #fef4f6!important;
+  color: #f0506e!important;
+}
+
 /* Navbar */
 
 nav img{
