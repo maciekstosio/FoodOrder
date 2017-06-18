@@ -1,45 +1,52 @@
+/* Navbar */
+
 nav img{
   width: 40px;
   height: 40px;
   margin-left: 10px;
 }
 
-#lists .state,
-#archive .state{
+/* List */
+
+.list .state{
   font-size: 10px;
   margin-top: -16px;
 }
 
-#lists .more,
-#archive .more{
+.list a.name{
+  color: #777;
+}
+
+.list a.name:hover{
+  text-decoration: none;
+  color: #555;
+}
+
+.list .more{
   padding-top: 25px;
 }
 
-#lists .order,
-#archive .order{
+.list .more .order{
   padding-left: 25px;
   padding-right: 25px;
 }
 
-#lists .order img,
-#archive .order img{
+.list .more .order img{
   width: 30px;
   height: 30px;
 }
 
-#lists .order .vertical-fix,
-#archive .order .vertical-fix{
+.list .more .order .vertical-fix{
   padding-top: 3px;
 }
 
-#lists .order .delete{
+.list .more .order .delete{
   margin-top: 5px;
   padding-left: 0px;
   margin-left: 5px;
   margin-right: -25px;
 }
 
-
-.orderform button{
+.list .orderform button{
   margin-top: 24px;
 }
