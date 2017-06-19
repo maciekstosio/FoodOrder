@@ -86,6 +86,22 @@ RSpec.describe ListsController do
       expect(response).to have_http_status(401)
     end
 
+    it "respondes HTTP 404 to authorized when list doesn't exist" do
+      request.headers.merge!(@user.create_new_auth_token)
+      put :update, params: { id: 666, list: {  state: 2 } }
+
+      expect(response).to have_http_status(404)
+    end
+
+    it "respondes HTTP 403 to authorized foreigner" do
+      user = User.create(name: "Test", email: "test@domain.com")
+      list = user.lists.create!(name: "Test")
+
+      request.headers.merge!(@user.create_new_auth_token)
+      put :update, params: { id: list.id, list: {  state: 2 } }
+
+      expect(response).to have_http_status(403)    end
+
     it "respondes HTTP 200 to authorized owner with valid state" do
       list = @user.lists.create!(name: "Test")
 
@@ -103,6 +119,55 @@ RSpec.describe ListsController do
       put :update, params: { id: list.id, list: {  state: 5 } }
 
       expect(response).to have_http_status(400)
+    end
+  end
+
+  describe "POST #create" do
+    it "respondes with HTTP 403 to unauthorized" do
+      post :create
+
+      expect(response).to have_http_status(401)
+    end
+
+    it "respondes with HTTP 400 to authorized with empty name" do
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { list: { name: "" } }
+
+      expect(response).to have_http_status(400)
+    end
+
+    it "respondes with HTTP 400 to authorized with to short name" do
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { list: { name: "ab" } }
+
+      expect(response).to have_http_status(400)
+    end
+
+    it "respondes with HTTP 200 to authorized with to empty link" do
+      count = List.count
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { list: { name: "somenamewithcorrectlength", link: "" } }
+
+      expect(response).to have_http_status(200)
+      expect(List.count-count).to eq(1)
+      expect(List.last.name).to eq("somenamewithcorrectlength")
+    end
+
+    it "respondes with HTTP 400 to authorized with to wrong link" do
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { list: { name: "abc", link: "asd" } }
+
+      expect(response).to have_http_status(400)
+    end
+
+    it "respondes with HTTP 200 to authorized with to correct name and link" do
+      count = List.count
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { list: { name: "somenamewithcorrectlength", link: "http://google.pl" } }
+
+      expect(response).to have_http_status(200)
+      expect(List.count-count).to eq(1)
+      expect(List.last.name).to eq("somenamewithcorrectlength")
     end
   end
 end
