@@ -20,17 +20,17 @@ class OrdersController < ApplicationController
         else
           render json: {
             messages: ["You can't order more than one thing"]
-          }, status: 400
+          }, status: 403
         end
       else
         render json: {
           messages: ["This list is closed, you can't add new order"]
-        }, status: 400
+        }, status: 403
       end
     else
       render json: {
         messages: ["List doesn't exists"]
-      }, status: 400
+      }, status: 404
     end
   end
 
@@ -53,22 +53,22 @@ class OrdersController < ApplicationController
           else
             render json: {
               messages: ["This list is closed, you can't delete your order"]
-            }, status: 400
+            }, status: 403
           end
         else
           render json: {
             messages: ["You don't have permission to delete this order"]
-          }, status: 400
+          }, status: 403
         end
       else
         render json: {
           messages: ["Order doesn't exists"]
-        }, status: 400
+        }, status: 404
       end
     else
       render json: {
         messages: ["List doesn't exists"]
-      }, status: 400
+      }, status: 404
     end
   end
 
