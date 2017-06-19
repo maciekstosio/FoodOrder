@@ -7,7 +7,7 @@ class OrdersController < ApplicationController
       list = List.where(id: params[:order][:list_id])
       if list.present?
         if list.first.state==0
-          if current_user.orders.where(list_id: params[:list_id]).count==0
+          if current_user.orders.where(list_id: params[:order][:list_id]).count==0
             if order.save
               render json: {
                 messages: ["Order added successfuly"],
