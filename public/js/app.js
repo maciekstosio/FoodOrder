@@ -46,7 +46,8 @@ app.config(function($authProvider,$routeProvider,$locationProvider){
 * HOME (Login) PAGE
 */
 
-app.controller('login', ['$scope', '$auth', '$location', function($scope,$auth,$location){
+app.controller('login', ['$rootScope', '$scope', '$auth', '$location', function($rootScope, $scope,$auth,$location){
+  $rootScope.controller = "login";
   $auth.validateUser().then(function(resp) {
     window.location  = '/'; //Use instead $location.path() to get rid of auth params
   });
