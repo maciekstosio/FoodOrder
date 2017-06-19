@@ -163,11 +163,12 @@ RSpec.describe ListsController do
     it "respondes with HTTP 200 to authorized with to correct name and link" do
       count = List.count
       request.headers.merge!(@user.create_new_auth_token)
-      post :create, params: { list: { name: "somenamewithcorrectlength", link: "http://google.pl" } }
+      post :create, params: { list: { name: "somenamewithcorrectlength", link: "http://correctwebsiteurl.pl" } }
 
       expect(response).to have_http_status(200)
       expect(List.count-count).to eq(1)
       expect(List.last.name).to eq("somenamewithcorrectlength")
+      expect(List.last.link).to eq("http://correctwebsiteurl.pl")
     end
   end
 end

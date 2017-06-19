@@ -4,7 +4,7 @@ Simple app that make food ordering easy usign authentication with GitHub.
 ### Installation
 
 1. Download app
-2. Install all gems using
+2. Install all gems
 ```
 bundle install
 ```
