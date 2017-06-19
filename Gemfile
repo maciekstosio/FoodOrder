@@ -31,9 +31,12 @@ group :development, :test do
 
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
-
   gem "figaro"
+end
 
+group :test do
+  gem 'rspec-rails'
+  gem 'database_cleaner'
 end
 
 group :development do
