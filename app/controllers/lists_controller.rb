@@ -25,13 +25,14 @@ class ListsController < ApplicationController
     list = List.where(id: params[:id])
     if list.present?
       if list.first.user_id==current_user.id
-        if list.first.update_attributes(state_params)
+        update_list = list.first
+        if update_list.update_attributes(state_params)
           render json: {
             messages: ["State changed successfuly"]
           }, status: 200
         else
           render json: {
-            messages: errors.full_messages
+            messages: update_list.errors.full_messages
           }, status: 400
         end
       else
