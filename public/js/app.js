@@ -1,6 +1,5 @@
 var app = angular.module('FoodOrder', ['ngRoute','ng-token-auth']);
-// var serverUrl = "http://localhost:3000"; //development
-var serverUrl = "http://foodorderappbeta.herokuapp.com"; //production
+var serverUrl = "http://localhost:3000"; //development
 
 /*
 *HELPERS
