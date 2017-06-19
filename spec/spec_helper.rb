@@ -25,7 +25,11 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
-  end    
+  end
+
+  config.after(:all) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
