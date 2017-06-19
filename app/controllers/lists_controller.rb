@@ -37,12 +37,12 @@ class ListsController < ApplicationController
       else
         render json: {
           messages: ["You don't have permission to change status of this list"]
-        }, status: 400
+        }, status: 403
       end
     else
       render json: {
         messages: ["List doesn't exist"]
-      }, status: 400
+      }, status: 404
     end
   end
 
@@ -62,12 +62,12 @@ class ListsController < ApplicationController
       else
         render json: {
           messages: ["You don't have permission to change status of this list"]
-        }, status: 400
+        }, status: 403
       end
     else
       render json: {
         messages: ["List doesn't exist"]
-      }, status: 400
+      }, status: 404
     end
   end
 
