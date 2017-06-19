@@ -47,6 +47,13 @@ RSpec.describe OrdersController do
       expect(response).to have_http_status(400)
     end
 
+    it "responds HTTP 400 to authorized user when list_iddoesn't exist" do
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { order: { name: "Test", price: 10000 }}
+
+      expect(response).to have_http_status(400)
+    end
+
     it "responds HTTP 400 to authorized user when name is to short" do
       list = @user.lists.create!(name: "Test")
 
@@ -73,7 +80,28 @@ RSpec.describe OrdersController do
 
       expect(response).to have_http_status(400)
     end
-    
+
+    it "responds HTTP 400 to authorized user when price is greater than 9999.99" do
+      list = @user.lists.create!(name: "Test")
+
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { order: { list_id: list.id, name: "Test", price: 10000 }}
+
+      expect(response).to have_http_status(400)
+    end
+
+    it "responds HTTP 200 to authorized user data is correct" do
+      list = @user.lists.create!(name: "Test")
+      count = Order.count
+
+      request.headers.merge!(@user.create_new_auth_token)
+      post :create, params: { order: { list_id: list.id, name: "Somecorrectdata", price: 666 }}
+
+      expect(response).to have_http_status(200)
+      expect(Order.count-count).to eq(1)
+      expect(Order.last.name).to eq("Somecorrectdata")
+      expect(Order.last.price).to eq(666)
+    end
     #Precision test
   end
 end
