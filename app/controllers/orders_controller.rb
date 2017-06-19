@@ -3,7 +3,7 @@ class OrdersController < ApplicationController
 
   def create
     order = current_user.orders.build(order_params)
-    list = List.where(id: params[:list_id])
+    list = List.where(id: params[:order][:list_id])
     if list.present?
       if list.first.state==0
         if current_user.orders.where(list_id: params[:list_id]).count==0
