@@ -70,7 +70,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
 
     //Load lists and orders
     $http.get(serverUrl+'/lists').then(function(resp) {
-      console.log(resp);
       $scope.lists = resp.data.lists;
       $scope.orders = resp.data.orders;
 
@@ -116,7 +115,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       resp.data.messages.forEach(function(val){
         error_notification(val);
       });
-      console.log(resp);
     });
   };
 
@@ -130,7 +128,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     };
 
     $http.put(serverUrl+"/lists/"+id, JSON.stringify(data)).then(function success(resp) {
-      console.log(resp);
       $scope.lists.find(function (e) { return e.id == id; }).state = $scope.liststate[id];
 
       //Notification
@@ -144,14 +141,12 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       resp.data.messages.forEach(function(val){
         error_notification(val);
       });
-      console.log(resp);
     });
   };
 
   //Delete list
   $scope.deletelist = function(id){
     $http.delete(serverUrl+"/lists/"+id).then(function success(resp) {
-      console.log(resp);
       for(var i=0; i < $scope.lists.length; i++){
         if($scope.lists[i].id == id){
           $scope.lists.splice(i,1);
@@ -164,7 +159,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
         success_notification(val);
       });
     }, function error(resp) {
-      console.log(resp);
       //Notification
       resp.data.messages.forEach(function(val){
         error_notification(val);
@@ -190,7 +184,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
     };
 
     $http.post(serverUrl+"/orders", JSON.stringify(data)).then(function success(resp) {
-      console.log(resp);
       $scope.orders.push({
         id: resp.data.id,
         list_id: id,
@@ -217,14 +210,11 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       resp.data.messages.forEach(function(val){
         error_notification(val);
       });
-      console.log(resp);
     });
   }
 
   $scope.deleteorder = function(list_id,id){
     $http.delete(serverUrl+"/lists/"+list_id+"/orders/"+id).then(function success(resp) {
-      console.log(resp);
-
       //Remove order
       for(var i=0; i < $scope.orders.length; i++){
         if($scope.orders[i].id == id){
@@ -246,7 +236,6 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
         success_notification(val);
       });
     }, function error(resp) {
-      console.log(resp);
       //Notification
       resp.data.messages.forEach(function(val){
         error_notification(val);
