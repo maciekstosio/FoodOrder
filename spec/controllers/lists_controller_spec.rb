@@ -12,21 +12,21 @@ RSpec.describe ListsController do
       expect(response).to have_http_status(401)
     end
 
-    it "DELETE /lists/:id respondes HTTP 401 to unauthorized" do
+    it "DELETE /lists/:id respondes HTTP 401" do
       list = @user.lists.create!(name: "Test")
       delete :destroy, params: { id: list.id }
 
       expect(response).to have_http_status(401)
     end
 
-    it "PUT /lists/:id respondes HTTP 401 to unauthorized" do
+    it "PUT /lists/:id respondes HTTP 401" do
       list = @user.lists.create!(name: "Test")
       put :update, params: { id: list.id, list: {  state: 2 } }
 
       expect(response).to have_http_status(401)
     end
 
-    it "POST /lists respondes with HTTP 403 to unauthorized" do
+    it "POST /lists respondes with HTTP 401" do
       post :create, params: { list: { name: "Test" }}
 
       expect(response).to have_http_status(401)
@@ -39,13 +39,13 @@ RSpec.describe ListsController do
     end
 
     describe "GET /lists" do
-      it "responds HTTP 200 when data doesn't exists" do
+      it "responds HTTP 200 when data doesn't exist" do
         get :index
 
         expect(response).to have_http_status(200)
       end
 
-      it "responds with HTTP 200 and content when data exist" do
+      it "responds with HTTP 200 and content when data exists" do
         lists = List.order(id: :desc).all
         orders = Order.joins(:user).select('orders.*, users.name as username, users.nickname as usernickname, users.image as userimage').all
 
@@ -75,7 +75,7 @@ RSpec.describe ListsController do
         expect(response).to have_http_status(403)
       end
 
-      it "respondes HTTP 404 when list doesn't exist" do
+      it "respondes HTTP 404 when list is missing" do
         delete :destroy, params: { id: 666 }
 
         expect(response).to have_http_status(404)
