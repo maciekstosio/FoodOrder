@@ -1,5 +1,5 @@
 var app = angular.module('FoodOrder', ['ngRoute','ng-token-auth']);
-var serverUrl = "http://localhost:3000"; //development
+var serverUrl = "http://localhost:3000"; //production
 
 /*
 *HELPERS
@@ -115,6 +115,7 @@ app.controller('app', ['$scope', '$auth', '$location', '$http', function($scope,
       resp.data.messages.forEach(function(val){
         error_notification(val);
       });
+
     });
   };
 
