@@ -126,4 +126,70 @@ RSpec.describe OrdersController do
       expect(response).to have_http_status(403)
     end
   end
+
+  describe "DELETE #destroy" do
+    it "responds HTTP 401 to unauthorized user" do
+      delete :destroy, params: { list_id: 1, id: 1 }
+
+      expect(response).to have_http_status(401)
+    end
+
+    it "responds HTTP 404 to authorized user when list doesn't exist" do
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: 666,  id: 1 }
+
+      expect(response). to have_http_status(404)
+    end
+
+    it "responds HTTP 404 to authorized user when order doesn't exist" do
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: 1,  id: 666 }
+
+      expect(response). to have_http_status(404)
+    end
+
+    it "responds HTTP 404 to authorized user when list doesn't match order" do
+      list = @user.lists.create!(name: "Test")
+      order = @user.orders.create!(list_id: list.id, name: "Order", price: 10)
+
+      list2 = @user.lists.create!(name: "Test2")
+
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: list2.id,  id: order.id }
+
+      expect(response). to have_http_status(404)
+    end
+
+    it "responds HTTP 403 to authorized user when list is closed" do
+      list = @user.lists.create!(name: "Test", state: 2)
+      order = @user.orders.create!(list_id: list.id, name: "Order", price: 10)
+
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: list.id,  id: order.id }
+
+      expect(response). to have_http_status(403)
+    end
+
+    it "responds HTTP 403 to authorized user when list belong to another user" do
+      user = User.create!(name: "Test", email: "test@domain.com")
+      list = user.lists.create!(name: "Test", state: 2)
+      order = user.orders.create!(list_id: list.id, name: "Order", price: 10)
+
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: list.id,  id: order.id }
+
+      expect(response). to have_http_status(403)
+    end
+
+    it "responds HTTP 200 to authorized when deleted successfuly" do
+      list = @user.lists.create!(name: "Test")
+      order = @user.orders.create!(list_id: list.id, name: "Order", price: 10)
+
+      request.headers.merge!(@user.create_new_auth_token)
+      delete :destroy, params: { list_id: list.id,  id: order.id }
+
+      expect(response).to have_http_status(200)
+      expect{ Order.find(order.id) }.to raise_exception(ActiveRecord::RecordNotFound)
+    end
+  end
 end
